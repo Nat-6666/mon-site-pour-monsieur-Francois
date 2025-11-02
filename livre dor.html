@@ -54,11 +54,39 @@
     const CONTENEUR = document.getElementById('livre-dor');
 
     
-        // Fonction d'aide pour analyser le CSV et le transformer en objets
+       // Fonction pour analyser le CSV en forçant le séparateur à point-virgule (;)
 function parseCSV(text) {
-    // Tente de déterminer le séparateur : virgule (CSV standard) ou point-virgule (régions FR)
-    const SEPARATEUR = text.includes(';') ? ';' : ',';
+    if (!text || text.length < 10) return [];
+    
+    // On force le split au point-virgule (Séparateur français)
+    const SEPARATEUR = ';';
 
+    const rows = text.split('\n');
+    const messages = [];
+
+    // Commencer à i=1 pour ignorer l'en-tête
+    for (let i = 1; i < rows.length; i++) {
+        // Split chaque ligne avec le séparateur force
+        const row = rows[i].split(SEPARATEUR);
+        
+        // Nous vérifions si nous avons au moins 4 colonnes (Horodateur, Nom, Année, Message)
+        if (row.length < 4) continue;
+
+        const message = {};
+        
+        // L'ordre des index doit rester : [1] Nom, [2] Année, [3] Message
+        
+        // Nettoyage et assignation des valeurs
+        message.Nom = row[1] ? row[1].replace(/"/g, '').trim() : 'Anonyme';
+        message.Annee = row[2] ? row[2].replace(/"/g, '').trim() : '';
+        message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
+
+        if (message.Message !== 'Pas de message.') {
+            messages.push(message);
+        }
+    }
+    return messages;
+}
     // Sépare le texte par lignes, puis chaque ligne par le séparateur trouvé
     // On s'assure d'abord que le texte n'est pas vide
     if (!text || text.length < 10) return [];
@@ -163,6 +191,7 @@ message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
 </body>
 
 </html>
+
 
 
 
