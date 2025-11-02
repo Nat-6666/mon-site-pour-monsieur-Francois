@@ -58,6 +58,42 @@
         // Sépare le texte par lignes, puis chaque ligne par virgules
         const rows = text.split('\n').map(row => row.split(','));
         const messages = [];
+        // Fonction d'aide pour analyser le CSV et le transformer en objets
+function parseCSV(text) {
+    // Tente de déterminer le séparateur : virgule (CSV standard) ou point-virgule (régions FR)
+    const SEPARATEUR = text.includes(';') ? ';' : ',';
+
+    // Sépare le texte par lignes, puis chaque ligne par le séparateur trouvé
+    // On s'assure d'abord que le texte n'est pas vide
+    if (!text || text.length < 10) return [];
+    
+    const rows = text.split('\n').map(row => row.split(SEPARATEUR));
+    const messages = [];
+
+    // Le code commence à l'index 1 (ligne 2) pour ignorer l'en-tête
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (row.length < 3) continue; // Ignore les lignes incomplètes
+
+        const message = {};
+        
+        // VEUILLEZ CONFIRMER QUE VOS INDEX SONT BIEN [1], [2], [3]
+        // Index 1 (colonne B) = Nom
+        // Index 2 (colonne C) = Année
+        // Index 3 (colonne D) = Message
+
+        // Nettoyage et assignation des valeurs
+        message.Nom = row[1] ? row[1].replace(/"/g, '').trim() : 'Anonyme';
+        message.Annee = row[2] ? row[2].replace(/"/g, '').trim() : '';
+        message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
+
+        // Ajoute seulement si le message n'est pas "Pas de message."
+        if (message.Message !== 'Pas de message.') {
+            messages.push(message);
+        }
+    }
+    return messages;
+}
 
         // Le code commence à l'index 1 (ligne 2) pour ignorer l'en-tête
         for (let i = 1; i < rows.length; i++) {
@@ -127,6 +163,7 @@
 </body>
 
 </html>
+
 
 
 
