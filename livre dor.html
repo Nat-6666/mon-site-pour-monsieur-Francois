@@ -78,10 +78,14 @@ function parseCSV(text) {
         // Index 2 (colonne C) = Année
         // Index 3 (colonne D) = Message
 
-        // Nettoyage et assignation des valeurs
-        message.Nom = row[1] ? row[1].replace(/"/g, '').trim() : 'Anonyme';
-        message.Annee = row[2] ? row[2].replace(/"/g, '').trim() : '';
-        message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
+       // Remplacez les lignes 'message.Nom...' par ce bloc :
+
+// Nettoyage et assignation des valeurs
+// On décale tous les index de 1 pour ignorer la colonne Horodateur (qui est row[0])
+
+message.Nom = row[1] ? row[1].replace(/"/g, '').trim() : 'Anonyme'; 
+message.Annee = row[2] ? row[2].replace(/"/g, '').trim() : ''; 
+message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
 
         // Ajoute seulement si le message n'est pas "Pas de message."
         if (message.Message !== 'Pas de message.') {
@@ -159,6 +163,7 @@ function parseCSV(text) {
 </body>
 
 </html>
+
 
 
 
