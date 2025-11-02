@@ -53,11 +53,7 @@
     const SHEET_URL = 'https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTlmtMeaYEXiGLzk0tW2KJY-Ca5Qob7YeZbk3xsrNIC_vUAG2ZFN3LcVV7u9FPSEwRVbLib-1xmAtXe/pub?output=csv';
     const CONTENEUR = document.getElementById('livre-dor');
 
-    // Fonction d'aide pour analyser le CSV et le transformer en objets
-    function parseCSV(text) {
-        // Sépare le texte par lignes, puis chaque ligne par virgules
-        const rows = text.split('\n').map(row => row.split(','));
-        const messages = [];
+    
         // Fonction d'aide pour analyser le CSV et le transformer en objets
 function parseCSV(text) {
     // Tente de déterminer le séparateur : virgule (CSV standard) ou point-virgule (régions FR)
@@ -163,6 +159,7 @@ function parseCSV(text) {
 </body>
 
 </html>
+
 
 
 
