@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Livre d'Or de l'Athénée</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* CSS de Base */
+        body { text-align: center; font-family: sans-serif; background-color: #ffdab9; }
+        h1 { color: #333; margin-top: 40px; }
+
+        /* Styles des Témoignages (Copiez le CSS du .temoignage ici) */
+        .temoignage {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 20px;
+            border-left: 5px solid #d35400;
+            background-color: #fff8e1;
+            font-style: italic;
+            text-align: left; /* Important : réaligner le texte du message à gauche */
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .signature {
+            text-align: right;
+            font-style: normal;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .retour-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="retour-btn">← Retour à la Page d'Accueil</a>
+
+<section id="livre-dor">
+    <h1>Les Messages des élèves.</h1>
+</section>
+
+<script>
+    // REMPLACER PAR VOTRE URL CSV PUBLIÉE (AVEC PROXY CORS-ANYWHERE)
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTlmtMeaYEXiGLzk0tW2KJY-Ca5Qob7YeZbk3xsrNIC_vUAG2ZFN3LcVV7u9FPSEwRVbLib-1xmAtXe/pub?output=csv';
+    const CONTENEUR = document.getElementById('livre-dor');
+
+    // [COLLEZ ICI TOUT LE CODE JAVASCRIPT DE LA FONCTION parseCSV ET afficherMessages]
+    // ... (collez tout le code de la réponse précédente ici)
+    // REMPLACER PAR VOTRE URL CSV PUBLIÉE (AVEC PROXY CORS-ANYWHERE)
+    // Votre URL doit maintenant commencer par : https://cors-anywhere.herokuapp.com/
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTlmtMeaYEXiGLzk0tW2KJY-Ca5Qob7YeZbk3xsrNIC_vUAG2ZFN3LcVV7u9FPSEwRVbLib-1xmAtXe/pub?output=csv';
+    const CONTENEUR = document.getElementById('livre-dor');
+
+    // Fonction d'aide pour analyser le CSV et le transformer en objets
+    function parseCSV(text) {
+        // Sépare le texte par lignes, puis chaque ligne par virgules
+        const rows = text.split('\n').map(row => row.split(','));
+        const messages = [];
+
+        // Le code commence à l'index 1 (ligne 2) pour ignorer l'en-tête
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            if (row.length < 3) continue; // Ignore les lignes incomplètes
+
+            const message = {};
+
+            // **VÉRIFIEZ CES INDEX**
+            // L'index [1] est 'Nom', [2] est 'Annee', [3] est 'Message' (selon l'ordre habituel)
+
+            // Nettoyage et assignation des valeurs
+            message.Nom = row[1] ? row[1].replace(/"/g, '').trim() : 'Anonyme';
+            message.Annee = row[2] ? row[2].replace(/"/g, '').trim() : '';
+            message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
+
+            // Ajoute seulement si le message n'est pas "Pas de message."
+            if (message.Message !== 'Pas de message.') {
+                messages.push(message);
+            }
+        }
+        return messages;
+    }
+
+    // Fonction principale pour charger et afficher les messages
+    async function afficherMessages() {
+        try {
+            const response = await fetch(SHEET_URL);
+
+            // Vérifie le statut HTTP (pour attraper les erreurs CORS ou 404)
+            if (!response.ok) {
+                throw new Error('Erreur de réseau ou de CORS. Statut: ' + response.status);
+            }
+
+            const csvText = await response.text();
+
+            const messages = parseCSV(csvText);
+
+            // Si le Livre d'Or est vide (seulement l'en-tête)
+            if (messages.length === 0) {
+                CONTENEUR.innerHTML += "<p style='text-align:center;'>Aucun message n'a encore été soumis ! Soyez le premier !</p>";
+                return;
+            }
+
+            messages.forEach(msg => {
+                // Crée la structure HTML pour chaque témoignage
+                const divMessage = document.createElement('div');
+                divMessage.className = 'temoignage';
+
+                divMessage.innerHTML = `
+                <p>${msg.Message}</p>
+                <p class="signature">- ${msg.Nom}, promotion ${msg.Annee}</p>
+            `;
+                CONTENEUR.appendChild(divMessage);
+            });
+
+        } catch (error) {
+            console.error("Erreur critique:", error);
+            CONTENEUR.innerHTML += "<p style='text-align:center; color:red;'>Oups ! Impossible de charger les messages pour le moment. Vérifiez l'URL de la feuille.</p>";
+        }
+    }
+
+    // Déclenche l'affichage quand la page est chargée
+    afficherMessages();
+
+</script>
+</body>
+</html>

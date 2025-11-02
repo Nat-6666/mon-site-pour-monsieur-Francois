@@ -1,0 +1,31 @@
+h1 {
+    text-align: center;
+    font-style: italic;
+    display: inline-block;
+    border-bottom: 4px solid #5a917c; /* Ligne rouge plus épaisse */
+    padding-bottom: 5px;
+    font-size: xx-large;
+}
+body {
+    background: peachpuff;
+}
+p {
+    font-size: x-large;
+    color: #3d8991;
+    margin: auto;
+}
+.temoignage {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    border-left: 5px solid #d35400; /* Ligne de décoration orange */
+    background-color: #fff8e1; /* Fond clair pour les messages */
+    font-style: italic;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* Petite ombre portée */
+}
+.signature {
+    text-align: right;
+    font-style: normal;
+    font-weight: bold;
+    margin-top: 10px;
+}
