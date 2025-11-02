@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Livre d'Or de l'Athénée</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
     <style>
         /* CSS de Base */
         body { text-align: center; font-family: sans-serif; background-color: #ffdab9; }
         h1 { color: #333; margin-top: 40px; }
 
-        /* Styles des Témoignages (Copiez le CSS du .temoignage ici) */
+        /* Styles des Témoignages */
         .temoignage {
             max-width: 650px;
             margin: 30px auto;
@@ -17,7 +17,7 @@
             border-left: 5px solid #d35400;
             background-color: #fff8e1;
             font-style: italic;
-            text-align: left; /* Important : réaligner le texte du message à gauche */
+            text-align: left;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
         .signature {
@@ -46,99 +46,38 @@
 </section>
 
 <script>
-    // [COLLEZ ICI TOUT LE CODE JAVASCRIPT DE LA FONCTION parseCSV ET afficherMessages]
-    // ... (collez tout le code de la réponse précédente ici)
-    // REMPLACER PAR VOTRE URL CSV PUBLIÉE (AVEC PROXY CORS-ANYWHERE)
-    // Votre URL doit maintenant commencer par : https://cors-anywhere.herokuapp.com/
+    // **1. URL CORRIGÉE AVEC PROXY CORS**
+    // Cette URL DOIT être la seule ligne active. L'ID est basé sur votre capture.
     const SHEET_URL = 'https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTlmtMeaYEXiGLzk0tW2KJY-Ca5Qob7YeZbk3xsrNIC_vUAG2ZFN3LcVV7u9FPSEwRVbLib-1xmAtXe/pub?output=csv';
     const CONTENEUR = document.getElementById('livre-dor');
 
-    
-       // Fonction pour analyser le CSV en forçant le séparateur à point-virgule (;)
-function parseCSV(text) {
-    if (!text || text.length < 10) return [];
-    
-    // On force le split au point-virgule (Séparateur français)
-    const SEPARATEUR = ';';
-
-    const rows = text.split('\n');
-    const messages = [];
-
-    // Commencer à i=1 pour ignorer l'en-tête
-    for (let i = 1; i < rows.length; i++) {
-        // Split chaque ligne avec le séparateur force
-        const row = rows[i].split(SEPARATEUR);
+    // **2. FONCTION parseCSV FINALE (Force le point-virgule)**
+    function parseCSV(text) {
+        if (!text || text.length < 10) return [];
         
-        // Nous vérifions si nous avons au moins 4 colonnes (Horodateur, Nom, Année, Message)
-        if (row.length < 4) continue;
+        // On FORCE le séparateur à point-virgule (Séparateur des régions francophones)
+        const SEPARATEUR = ';';
 
-        const message = {};
-        
-        // L'ordre des index doit rester : [1] Nom, [2] Année, [3] Message
-        
-        // Nettoyage et assignation des valeurs
-        message.Nom = row[1] ? row[1].replace(/"/g, '').trim() : 'Anonyme';
-        message.Annee = row[2] ? row[2].replace(/"/g, '').trim() : '';
-        message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
+        const rows = text.split('\n');
+        const messages = [];
 
-        if (message.Message !== 'Pas de message.') {
-            messages.push(message);
-        }
-    }
-    return messages;
-}
-    // Sépare le texte par lignes, puis chaque ligne par le séparateur trouvé
-    // On s'assure d'abord que le texte n'est pas vide
-    if (!text || text.length < 10) return [];
-    
-    const rows = text.split('\n').map(row => row.split(SEPARATEUR));
-    const messages = [];
-
-    // Le code commence à l'index 1 (ligne 2) pour ignorer l'en-tête
-    for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
-        if (row.length < 3) continue; // Ignore les lignes incomplètes
-
-        const message = {};
-        
-        // VEUILLEZ CONFIRMER QUE VOS INDEX SONT BIEN [1], [2], [3]
-        // Index 1 (colonne B) = Nom
-        // Index 2 (colonne C) = Année
-        // Index 3 (colonne D) = Message
-
-       // Remplacez les lignes 'message.Nom...' par ce bloc :
-
-// Nettoyage et assignation des valeurs
-// On décale tous les index de 1 pour ignorer la colonne Horodateur (qui est row[0])
-
-message.Nom = row[1] ? row[1].replace(/"/g, '').trim() : 'Anonyme'; 
-message.Annee = row[2] ? row[2].replace(/"/g, '').trim() : ''; 
-message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
-
-        // Ajoute seulement si le message n'est pas "Pas de message."
-        if (message.Message !== 'Pas de message.') {
-            messages.push(message);
-        }
-    }
-    return messages;
-}
-
-        // Le code commence à l'index 1 (ligne 2) pour ignorer l'en-tête
+        // Commencer à i=1 pour ignorer la ligne d'en-tête
         for (let i = 1; i < rows.length; i++) {
-            const row = rows[i];
-            if (row.length < 3) continue; // Ignore les lignes incomplètes
+            // Split chaque ligne avec le séparateur forcé
+            const row = rows[i].split(SEPARATEUR);
+            
+            // On vérifie si on a au moins 4 colonnes (A, B, C, D)
+            if (row.length < 4) continue; 
 
             const message = {};
-
-            // **VÉRIFIEZ CES INDEX**
-            // L'index [1] est 'Nom', [2] est 'Annee', [3] est 'Message' (selon l'ordre habituel)
-
+            
+            // **3. INDEX DES COLONNES CONFIRMÉS (1=Nom, 2=Année, 3=Message)**
             // Nettoyage et assignation des valeurs
             message.Nom = row[1] ? row[1].replace(/"/g, '').trim() : 'Anonyme';
             message.Annee = row[2] ? row[2].replace(/"/g, '').trim() : '';
             message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
 
-            // Ajoute seulement si le message n'est pas "Pas de message."
+            // Ajoute le message seulement s'il y a du contenu
             if (message.Message !== 'Pas de message.') {
                 messages.push(message);
             }
@@ -151,36 +90,36 @@ message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
         try {
             const response = await fetch(SHEET_URL);
 
-            // Vérifie le statut HTTP (pour attraper les erreurs CORS ou 404)
             if (!response.ok) {
-                throw new Error('Erreur de réseau ou de CORS. Statut: ' + response.status);
+                // Si le CORS échoue à cause du proxy non débloqué
+                throw new Error('Erreur de connexion. Avez-vous débloqué le proxy CORS ?');
             }
 
             const csvText = await response.text();
 
             const messages = parseCSV(csvText);
 
-            // Si le Livre d'Or est vide (seulement l'en-tête)
+            // Si le code lit mais ne trouve rien (seulement l'en-tête + lignes vides)
             if (messages.length === 0) {
                 CONTENEUR.innerHTML += "<p style='text-align:center;'>Aucun message n'a encore été soumis ! Soyez le premier !</p>";
                 return;
             }
 
             messages.forEach(msg => {
-                // Crée la structure HTML pour chaque témoignage
                 const divMessage = document.createElement('div');
                 divMessage.className = 'temoignage';
 
                 divMessage.innerHTML = `
-                <p>${msg.Message}</p>
-                <p class="signature">- ${msg.Nom}, promotion ${msg.Annee}</p>
-            `;
+                    <p>${msg.Message}</p>
+                    <p class="signature">- ${msg.Nom}, promotion ${msg.Annee}</p>
+                `;
                 CONTENEUR.appendChild(divMessage);
             });
 
         } catch (error) {
             console.error("Erreur critique:", error);
-            CONTENEUR.innerHTML += "<p style='text-align:center; color:red;'>Oups ! Impossible de charger les messages pour le moment. Vérifiez l'URL de la feuille.</p>";
+            // Ce message d'erreur s'affiche si la connexion échoue (problème CORS ou URL)
+            CONTENEUR.innerHTML += "<p style='text-align:center; color:red;'>Oups ! Impossible de charger les messages pour le moment. Vérifiez le lien du proxy.</p>";
         }
     }
 
@@ -189,16 +128,4 @@ message.Message = row[3] ? row[3].replace(/"/g, '').trim() : 'Pas de message.';
 
 </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
